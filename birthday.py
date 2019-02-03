@@ -8,10 +8,10 @@ year = []
 month = []
 day = []
 
-# создаю окно с определённым размером
+# создаю главное окно с определённым размером без возможности менять его машью
 root = Tk()
 root.title('Расчёт дня недели возраста и времени прошедшего с даты рождения')
-root.minsize(655, 290)  # а можно задать root.geometry('640x480') тогда окно будет задан. разм., но может изменяться
+root.minsize(655, 290)  # можно задать root.geometry('640x480') опеределённый разм. с возможностью изменения
 root.maxsize(655, 290)
 root.iconbitmap(default='windowico.ico')  # ставлю иконку в угол окна
 
@@ -36,7 +36,7 @@ window_montht = Label(root, text='Месяц рождения')
 
 for two in range(12):
     month.append(two + 1)
-window_month = ttk.Combobox(root, width=10, height=20)
+window_month = ttk.Combobox(root, width=10, height=12)
 window_month['values'] = month
 
 # тут упаковываю выпадающий список месяца рождения
@@ -64,7 +64,7 @@ button.grid(row=5, column=0, pady=10, padx=10)
 button1 = Button(root, text='Когда др в Пт и Сб?')
 button1.grid(row=5, column=7, pady=10)
 
-# сам функционал окна
+# сам функционал окна (backend)
 weekdays = ['понедельник', 'вторник', 'среду', 'четверг', 'пятницу', 'субботу', 'воскресенье']
 
 
@@ -217,8 +217,8 @@ def output1(eventpt):
         counter = 0
         text = ''
         try:
-            daysinmonth = calendar.monthrange(needformat[0], needformat[1])  # в первом аргументе день недели с которого
-                                                                             # начался месяц во втором сколько дней в месяце
+            daysinmonth = calendar.monthrange(needformat[0], needformat[1])  # в первом аргументе день недели с
+            # которого начался месяц, во втором сколько дней в месяце
         except calendar.IllegalMonthError:
             daysinmonth = needformat[2]
 
@@ -252,8 +252,9 @@ button1.bind("<Button-1>", output1)
 outtext = Text(width=80, height=7)
 outtext.grid(row=4, column=0, pady=5, padx=5, columnspan=10)
 
-root.mainloop()
+# создаю и закрепляю виджет прокрутки к текстовому полю в котором будет отображаться результат обработки
+vscrollbar = Scrollbar(orient='vert', command=outtext.yview)
+outtext['yscrollcommand'] = vscrollbar.set
+vscrollbar.grid(row=4, column=0, pady=5, padx=5, columnspan=10, sticky=N+S+E)
 
-'''
-надо добавить скролинг окна если текст становится больше чем одна страница
-'''
+root.mainloop()
